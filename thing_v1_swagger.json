@@ -1,0 +1,213 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Dummy API",
+    "version": "1.0",
+    "title": "Dummy API"
+  },
+  "host": "localhost:5555",
+  "basePath": "/thing",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/": {
+      "post": {
+        "tags": [
+          "thing"
+        ],
+        "summary": "Create a new thing",
+        "description": "Create a thing",
+        "operationId": "thing_create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "thing",
+            "in": "body",
+            "description": "Some data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/thing"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created successfully",
+            "headers": {
+              "Location": {
+                "description": "The URI of the resource that has been created",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{thingId}": {
+      "get": {
+        "tags": [
+          "thing"
+        ],
+        "summary": "Get thing",
+        "description": "Get thing by ID",
+        "operationId": "thing_get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "thingId",
+            "description": "Thing identifier",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/thing"
+            }
+          },
+          "404": {
+            "description": "Thing not found",
+            "schema": {
+              "$ref": "#/definitions/failure"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "thing"
+        ],
+        "summary": "Update thing",
+        "description": "Update a thing",
+        "operationId": "thing_update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "thingId",
+            "description": "Thing identifier",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated"
+          },
+          "404": {
+            "description": "Thing not found",
+            "schema": {
+              "$ref": "#/definitions/failure"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "thing"
+        ],
+        "summary": "Delete thing",
+        "description": "Delete a thing",
+        "operationId": "thing_delete",
+        "produces": [
+          ""
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "thingId",
+            "description": "Thing identifier",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted"
+          },
+          "404": {
+            "description": "Thing not found",
+            "schema": {
+              "$ref": "#/definitions/failure"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "thing": {
+      "type": "object"
+    },
+    "failure": {
+      "description": "Generic API failure payload - aligns to the JSON API specification",
+      "type": "object",
+      "required": [
+        "errors"
+      ],
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "A unique identifier for this particular occurrence of the problem.",
+                "type": "string"
+              },
+              "status": {
+                "description": "The HTTP status code applicable to this problem, expressed as a string value.",
+                "type": "string"
+              },
+              "code": {
+                "description": "An application-specific error code, expressed as a string value.",
+                "type": "string"
+              },
+              "title": {
+                "description": "A short, human-readable summary of the problem. It **SHOULD NOT** change from occurrence to occurrence of the problem, except for purposes of localization.",
+                "type": "string"
+              },
+              "detail": {
+                "description": "A human-readable explanation specific to this occurrence of the problem.",
+                "type": "string"
+              },
+              "source": {
+                "type": "object",
+                "properties": {
+                  "pointer": {
+                    "description": "A JSON Pointer [RFC6901] to the associated entity in the request document [e.g. \"/data\" for a primary data object, or \"/data/attributes/title\" for a specific attribute].",
+                    "type": "string"
+                  },
+                  "parameter": {
+                    "description": "A string indicating which query parameter caused the error.",
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "securityDefinitions": {}
+}
