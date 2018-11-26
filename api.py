@@ -11,10 +11,12 @@ import os
 import sys
 import datetime
 import routes
+import uuid
+import json
 from time import sleep
 from random import choice
 from string import ascii_uppercase
-from bottle import HTTPResponse
+from bottle import HTTPResponse, request, response
 
 
 # --- FUNCTIONS --------------------------------------------------------------
@@ -94,17 +96,56 @@ if __name__ == '__main__':
                 }
             }
 
-
         delayseconds = delay/1000
         sleep(delayseconds)
+        
+        headers = {
+            'Cache-Control': 'public,max-age=0',
+            'Content-Type': 'application/json'
+        }
+        return HTTPResponse(status=200, body=response_json, headers=headers)
 
-        bottle.response.headers['Cache-Control'] = 'public,max-age=0'
-        return HTTPResponse(status=200, body=response_json)
+
+    @bottle.route('/thing', method='POST')
+    def create_thing():
+        if not is_json( request.body.getvalue() ):
+            return HTTPResponse(body='Invalid JSON payload', status=400)
+            
+        delayseconds = delay/1000
+        sleep(delayseconds)
+        
+        headers = {
+            'Location': '/thing/' + str(uuid.uuid4())
+        }
+        return HTTPResponse(status=201, headers=headers)
+
+
+    @bottle.route('/thing/:id', method='PATCH')
+    def update_thing(id):
+        if not is_json( request.body.getvalue() ):
+            return HTTPResponse(body='Invalid JSON payload', status=400)
+            
+        delayseconds = delay/1000
+        sleep(delayseconds)
+        
+        return HTTPResponse(status=200, body=request.body)
 
 
     @bottle.route('/thing/:id', method='DELETE')
     def delete_thing(id):
+        delayseconds = delay/1000
+        sleep(delayseconds)
+        
         return HTTPResponse(status=204)
+
+
+    def is_json(testString):
+        try:
+            jsonString = json.loads(testString)
+        except ValueError:
+            return False
+        
+        return True
 
 
     # Starts a local test server.
